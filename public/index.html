@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Facility Assessment Snapshot Generator</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <main class="app-shell">
+    <section class="hero-card" aria-labelledby="app-title">
+      <div class="brand-lockup" aria-label="INFINITE — Managed by MEDELITE">
+        <span class="brand-infinite">INFINITE</span>
+        <span class="brand-dash">—</span>
+        <span class="brand-managed">Managed by</span>
+        <span class="brand-medelite">MEDELITE</span>
+      </div>
+      <h1 id="app-title">FACILITY ASSESSMENT SNAPSHOT</h1>
+      <p class="hero-copy">Enter a CMS Certification Number to pull public CMS data, add Medelite operating details, and download a polished PDF snapshot.</p>
+    </section>
+
+    <section class="panel lookup-panel" aria-labelledby="lookup-title">
+      <div>
+        <h2 id="lookup-title">1. CMS Facility Lookup</h2>
+        <p>Enter a 6-digit CMS Certification Number to load the facility's public CMS data.</p>
+      </div>
+      <form id="lookupForm" class="lookup-form">
+        <label for="ccnInput">CMS Certification Number (CCN)</label>
+        <div class="lookup-row">
+          <input id="ccnInput" name="ccn" type="text" inputmode="numeric" maxlength="6" placeholder="Enter 6-digit CCN" autocomplete="off" required />
+          <button id="lookupButton" type="submit">Lookup Facility</button>
+        </div>
+      </form>
+      <div id="lookupStatus" class="status" role="status" aria-live="polite"></div>
+    </section>
+
+    <section class="grid-two">
+      <section class="panel" aria-labelledby="manual-title">
+        <h2 id="manual-title">2. Manual Operational Inputs</h2>
+        <div class="form-grid">
+          <label>
+            Facility Name Override <span class="optional">(optional)</span>
+            <input id="facilityNameOverride" type="text" placeholder="Use only if different from CMS legal name" />
+          </label>
+          <label>
+            EMR
+            <input id="emr" type="text" placeholder="Enter EMR name" />
+          </label>
+          <label>
+            Current Census
+            <input id="currentCensus" type="number" min="0" step="1" placeholder="Enter current census" />
+          </label>
+          <label>
+            Type of Patient
+            <input id="patientType" type="text" placeholder="Enter patient type" />
+          </label>
+          <label>
+            Previous Coverage from Medelite
+            <select id="previousCoverage">
+              <option value="">Select...</option>
+              <option>Yes</option>
+              <option>No</option>
+            </select>
+          </label>
+          <label>
+            Previous Provider Performance from Medelite
+            <input id="previousProviderPerformance" type="text" placeholder="Enter prior performance details" />
+          </label>
+          <label class="wide">
+            Medical Coverage
+            <input id="medicalCoverage" type="text" placeholder="Enter medical coverage" />
+          </label>
+        </div>
+      </section>
+
+      <section class="panel" aria-labelledby="cms-title">
+        <h2 id="cms-title">CMS Data Preview</h2>
+        <dl class="cms-preview">
+          <div><dt>Official Facility Name</dt><dd id="officialName">—</dd></div>
+          <div><dt>Location</dt><dd id="location">—</dd></div>
+          <div><dt>Census Capacity</dt><dd id="censusCapacity">—</dd></div>
+          <div><dt>Overall / Health / Staffing / QM</dt><dd id="ratings">—</dd></div>
+        </dl>
+        <a id="careCompareLink" class="source-link hidden" target="_blank" rel="noreferrer">Open Medicare Care Compare profile</a>
+      </section>
+    </section>
+
+    <section class="panel report-panel" aria-labelledby="report-title">
+      <div class="report-header-row">
+        <div>
+          <h2 id="report-title">3. Report Preview</h2>
+          <p>The generated PDF uses this same report body, with the required INFINITE — Managed by MEDELITE header.</p>
+        </div>
+        <button id="downloadButton" type="button" disabled>Download PDF</button>
+      </div>
+      <div class="snapshot-preview" aria-label="Facility Assessment Snapshot Preview">
+        <div class="preview-brand" aria-label="INFINITE — Managed by MEDELITE">
+          <span class="brand-infinite">INFINITE</span>
+          <span class="brand-dash">—</span>
+          <span class="brand-managed">Managed by</span>
+          <span class="brand-medelite">MEDELITE</span>
+        </div>
+        <h3>FACILITY ASSESSMENT SNAPSHOT</h3>
+        <div id="previewState" class="preview-state" aria-label="Facility state abbreviation">—</div>
+        <table id="reportTable">
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <template id="emptyReportRows">
+    <tr><th>Name of Facility</th><td>—</td></tr>
+    <tr><th>Location</th><td>—</td></tr>
+    <tr><th>EMR</th><td>—</td></tr>
+    <tr><th>Census Capacity</th><td>—</td></tr>
+    <tr><th>Current Census</th><td>—</td></tr>
+    <tr><th>Type of Patient</th><td>—</td></tr>
+    <tr><th>Previous Coverage from Medelite</th><td>—</td></tr>
+    <tr><th>Previous Provider Performance from Medelite</th><td>—</td></tr>
+    <tr><th>Medical Coverage</th><td>—</td></tr>
+    <tr><th>Overall Star Rating</th><td>—</td></tr>
+    <tr><th>Health Inspection</th><td>—</td></tr>
+    <tr><th>Staffing</th><td>—</td></tr>
+    <tr><th>Quality of Resident Care</th><td>—</td></tr>
+    <tr class="metric"><th>Short Term Hospitalization</th><td>—</td></tr>
+    <tr class="metric"><th>STR National Avg. for Hospitalization</th><td>—</td></tr>
+    <tr class="metric"><th>STR State National Avg. for Hospitalization</th><td>—</td></tr>
+    <tr class="metric"><th>STR ED Visit</th><td>—</td></tr>
+    <tr class="metric"><th>STR ED Visits National Avg.</th><td>—</td></tr>
+    <tr class="metric"><th>STR ED Visits State Avg.</th><td>—</td></tr>
+    <tr class="metric"><th>LT Hospitalization</th><td>—</td></tr>
+    <tr class="metric"><th>LT National Avg. for Hospitalization</th><td>—</td></tr>
+    <tr class="metric"><th>LT State National Avg. for Hospitalization</th><td>—</td></tr>
+    <tr class="metric"><th>ED Visit</th><td>—</td></tr>
+    <tr class="metric"><th>LT ED Visits National Avg.</th><td>—</td></tr>
+    <tr class="metric"><th>LT ED Visits State Avg.</th><td>—</td></tr>
+  </template>
+
+  <script src="/app.js" defer></script>
+</body>
+</html>
