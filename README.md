@@ -1,6 +1,7 @@
 ### Facility Assessment Report Generator ###
 
 Live App: https://facility-assessment-report-generator-kfy5.onrender.com/
+
 GitHub Repository: https://github.com/sushantoc8/facility-assessment-report-generator
 
 
@@ -54,8 +55,11 @@ This helped me turn a broad real-world workflow into a working hosted applicatio
 To run the project locally, clone the repository, install the required dependencies, and start the application with Python.
 
 git clone https://github.com/sushantoc8/facility-assessment-report-generator.git
+
 cd facility-assessment-report-generator
+
 pip install -r requirements.txt
+
 python app.py
 
 Then open the local URL shown in the terminal.
